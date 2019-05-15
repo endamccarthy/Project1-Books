@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div>
+    <div class="row justify-content-start">
+        <div class="col-3">
+            <h2>Blank</h2>
+        </div>
+        <div class="col-4 align-self-end">
+            <h2>Enda McCarthy</h2>
+            <h4>Software Development</h4>
+        </div>
+    </div>
+</div>
+<div class="line"></div>
+<div class="inside-content">
+    <form method="POST" action="">
+        <fieldset class="form-group row mb-2 mx-4"">
+            <div class="form-group col-xs-3">
+                {{ form.symbol(autocomplete="off", autofocus="on", class="form-control") }}
+            </div>
+        </fieldset>
+        <div class="form-group row col-xs-3 mx-4"">
+            {{ form.submit(class="btn btn-sm btn-outline-dark") }}
+        </div>
+    </form>
+    {% if book_id %}
+        <p>
+            This book's ID is {{ book_id }}.<br>
+            This book's ISBN is {{ book_isbn }}.<br>
+            This book's average rating is {{ book_average_rating }}.
+        </p>
+    {% endif %}
+</div>
+{% endblock content %}

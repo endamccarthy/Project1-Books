@@ -1,0 +1,247 @@
+
+/* ---------------------------------------------------
+    SASS VARIABLES
+----------------------------------------------------- */
+
+$color01: rgb(83, 153, 118);    /* Navbar 01 */
+$color02: rgb(93, 163, 128);    /* Navbar 02 */
+$color03: black;                /* Navbar Text */
+$color04: rgb(105, 105, 105);   /* Content Text */
+$color05: rgb(111, 102, 163);   /* Icons */
+
+/* Inheritance */
+%font-family01 {
+    font-family: 'Poppins', sans-serif;
+  }
+
+/* ---------------------------------------------------
+    GENERAL STYLE
+----------------------------------------------------- */
+
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+
+body {
+    @extend %font-family01;
+    background: #fafafa;
+}
+
+p,
+.paragraphList {
+    @extend %font-family01;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: $color04 ;
+}
+
+a,
+a:hover,
+a:focus {
+    color: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.navbar {
+    min-height: 90px;
+    padding: 15px 10px;
+    background: $color01;
+    border: none;
+    border-radius: 0;
+    margin-bottom: 20px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.line {
+    width: 100%;
+    height: 1px;
+    border-bottom: 1px dashed #ddd;
+    margin: 40px 0;
+}
+
+.footer {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 5px;
+    padding-top: 60px;
+    font-size: 0.8em;
+  }
+
+img {
+    margin-left: 40px;
+}
+
+#headshot {
+    max-width: 75%;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 999;
+    background: $color02;
+    color: $color03;
+    transition: all 0.3s;
+}
+
+#sidebar.active {
+    margin-left: -250px;
+}
+
+/* SCSS Nesting */
+#sidebar {
+    .sidebar-header {
+        padding-left: 10px;
+        padding-top: 20px;
+        background: $color01;
+        min-height: 90px;
+    }
+
+    ul.components {
+        padding: 20px 0;
+        border-bottom: 1px solid #47748b;
+    }
+
+    ul p {
+        color: $color03;
+        padding: 10px;
+    }
+
+    ul li a {
+        padding: 10px;
+        font-size: 1.1em;
+        display: block;
+    }
+
+    ul li a:hover {
+        color: $color02;
+        background: #fff;
+    }
+
+    ul li.active>a,
+    a[aria-expanded="true"] {
+        color: $color03;
+        background: $color01;
+    }
+} 
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+ul ul a {
+    font-size: 0.9em !important;
+    padding-left: 30px !important;
+    background: $color02;
+}
+
+ul.CTAs {
+    padding: 20px;
+}
+
+ul.CTAs a {
+    text-align: center;
+    font-size: 0.9em !important;
+    display: block;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+#content {
+    width: calc(100% - 250px);
+    padding: 0px;
+    min-height: 100vh;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content.active {
+    width: 100%;
+}
+
+.inside-content {
+    padding-left: 200px;
+    padding-right: 200px;
+    padding-bottom: 30px;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #content {
+        width: 100%;
+    }
+    #content.active {
+        width: calc(100% - 250px);
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+}
+
+/* ---------------------------------------------------
+    RESULTS TABLE STYLE
+----------------------------------------------------- */
+
+th {
+    @extend %font-family01;
+    font-size: 1em;
+    line-height: 1.7em;
+    color: $color03 ;
+    font-weight: normal;
+}
+
+.table-header {
+    font-size: 1.5em;
+}
+
+/* ---------------------------------------------------
+    FONT AWESOME ICONS STYLE
+----------------------------------------------------- */
+
+.fa-github-square {
+    color: $color05;
+}
+
+.fa-linkedin {
+    color: $color05;
+}
+
+.fa-envelope-square {
+    color: $color05;
+}

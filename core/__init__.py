@@ -15,9 +15,11 @@ def create_app(config_class=Config):
 
     Session(app)
 
+    # Database setup
     engine = create_engine(os.getenv("HEROKU_DATABASE_URL"))
     db = scoped_session(sessionmaker(bind=engine))
 
+    # Blueprints setup
     from core.main.routes import main
     app.register_blueprint(main)
 
