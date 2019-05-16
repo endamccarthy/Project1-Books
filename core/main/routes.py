@@ -35,7 +35,8 @@ def lookup(isbn):
         return {
             "id": bookInfo["id"],
             "isbn": bookInfo["isbn"],
-            "average_rating": bookInfo["average_rating"]
+            "average_rating": bookInfo["average_rating"],
+            "work_ratings_count": bookInfo["work_ratings_count"]
         }
     except (KeyError, TypeError, ValueError):
         return None
