@@ -6,18 +6,24 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from core.config import Config
 
 
+# Database setup
+if not os.getenv("HEROKU_DATABASE_URL"):
+    raise RuntimeError("HEROKU_DATABASE_URL is not set")
+engine = create_engine(os.getenv("HEROKU_DATABASE_URL"))
+db = scoped_session(sessionmaker(bind=engine))
+
 def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(Config)
-
-    if not os.getenv("HEROKU_DATABASE_URL"):
-        raise RuntimeError("HEROKU_DATABASE_URL is not set")
-
     Session(app)
 
-    # Database setup
-    engine = create_engine(os.getenv("HEROKU_DATABASE_URL"))
-    db = scoped_session(sessionmaker(bind=engine))
+    # create users table
+    db.execute("CREATE TABLE IF NOT EXISTS users (\
+                id Integer PRIMARY KEY, \
+                username VARCHAR(20) NOT NULL UNIQUE, \
+                email VARCHAR(120) NOT NULL UNIQUE, \
+                password VARCHAR(255))")
+    db.commit()
 
     # Blueprints setup
     from core.main.routes import main
