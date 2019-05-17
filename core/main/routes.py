@@ -12,7 +12,7 @@ main = Blueprint('main', __name__)
 @main.route("/", methods=['GET', 'POST'])
 def index():
     form = BookForm()
-    if not form.validate_on_submit():
+    if form.validate_on_submit():
         book = lookup(form.symbol.data)
         book_id = book["id"]
         book_isbn = book["isbn"]

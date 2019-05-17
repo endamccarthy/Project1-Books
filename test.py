@@ -2,18 +2,16 @@ from core import db
  
  
 def test():
-    rows = db.execute("SELECT * FROM books ORDER BY title")
+    rows = db.execute("SELECT * FROM books WHERE author='Jodi Picoult' FETCH FIRST ROW ONLY")
     for row in rows:
         print(row["title"])
 
-    # create users table
-    db.execute("CREATE TABLE IF NOT EXISTS users (\
-                id Integer PRIMARY KEY, \
-                username VARCHAR(20) NOT NULL UNIQUE, \
-                email VARCHAR(120) NOT NULL UNIQUE, \
-                password VARCHAR(255))")
-    db.commit()
- 
+    users = db.execute("SELECT * FROM users WHERE username='enda' FETCH FIRST ROW ONLY")
+    for user in users:
+        print('test')
+        print(user["username"])
+    
+
 
 if __name__ == '__main__':
     test()
