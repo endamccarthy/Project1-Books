@@ -15,9 +15,21 @@
 <div class="line"></div>
 <div class="inside-content">
     <form method="POST" action="">
+        {{ form.hidden_tag() }}
         <fieldset class="form-group row mb-2 mx-4"">
+            <legend class="border-bottom mb-4">{{ legend }}</legend>
             <div class="form-group col-xs-3">
-                {{ form.symbol(autocomplete="off", autofocus="on", class="form-control") }}
+                {{ form.symbol.label(class="form-control-label") }}
+                {% if form.symbol.errors %}
+                    {{ form.symbol(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.symbol.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.symbol(autocomplete="off", autofocus="on", class="form-control") }}
+                {% endif %}
             </div>
         </fieldset>
         <div class="form-group row col-xs-3 mx-4"">

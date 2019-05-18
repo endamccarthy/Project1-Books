@@ -13,12 +13,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
-        users = db.execute("SELECT * FROM users WHERE username='username.data' FETCH FIRST ROW ONLY")
+        users = db.execute("SELECT * FROM users WHERE username=(:username) FETCH FIRST ROW ONLY", {"username": username.data})
         for user in users:
             raise ValidationError('That username is taken. Please choose a different one.')
 
     def validate_email(self, email):
-        users = db.execute("SELECT * FROM users WHERE email='email.data' FETCH FIRST ROW ONLY")
+        users = db.execute("SELECT * FROM users WHERE email=(:email) FETCH FIRST ROW ONLY", {"email": email.data})
         for user in users:
             raise ValidationError('That email is taken. Please choose a different one.')
 
