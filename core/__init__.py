@@ -2,6 +2,7 @@ import os
 from flask import Flask, session
 from flask_session import Session
 from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from core.config import Config
@@ -14,6 +15,9 @@ engine = create_engine(os.getenv("HEROKU_DATABASE_URL"))
 db = scoped_session(sessionmaker(bind=engine))
 
 bcrypt = Bcrypt()
+login_manager = LoginManager()
+login_manager.login_view = 'users.login'
+login_manager.login_message_category = 'info'
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -21,6 +25,7 @@ def create_app(config_class=Config):
     Session(app)
 
     bcrypt.init_app(app)
+    login_manager.init_app(app)
 
     # create users table
     db.execute("CREATE TABLE IF NOT EXISTS users (\
