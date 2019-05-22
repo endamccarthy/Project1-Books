@@ -1,18 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div>
-    <div class="row justify-content-start">
-        <div class="col-3">
-            <h2>Blank</h2>
-        </div>
-        <div class="col-4 align-self-end">
-            <h2>Enda McCarthy</h2>
-            <h4>Software Development</h4>
-        </div>
-    </div>
-</div>
-<div class="line"></div>
 <div class="inside-content">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
@@ -44,10 +32,6 @@
                     {{ form.password(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
-            <div class="form-check">
-                {{ form.remember(class="form-check-input") }}
-                {{ form.remember.label(class="form-check-label") }}
-            </div>
         </fieldset>
         <div class="form-group">
             {{ form.submit(class="btn btn-outline-secondary") }}
@@ -56,11 +40,10 @@
             </small>
         </div>
     </form>
-</div>
-<div class="bordor-top pt-3">
-    <small class="text-muted">
-        Need An Account? <a class="ml-2" href="{{ url_for('users.register') }}">Sign Up Now</a>
-    </small>
-</div>
+    <div class="bordor-top pt-3">
+        <small class="text-muted">
+            Need An Account? <a class="ml-2" href="{{ url_for('users.register') }}">Sign Up Now</a>
+        </small>
+    </div>
 </div>
 {% endblock content %}

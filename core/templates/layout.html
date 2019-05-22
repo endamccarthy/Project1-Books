@@ -65,10 +65,16 @@
                         <button type="button" id="sidebarCollapse" class="btn btn-secondary">
                             <i class="fas fa-align-left"></i>
                         </button>
-                        <a class="navbar-brand" href="home.html">
-                            <h2>CS50 Web Programming - Project 0</h2>
+                        <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                            <h3>CS50 Web Programming - Project 0</h3>
                         </a>
                     </div>
+                    {% if g.user_id %}
+                        <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
+                    {% else %}
+                        <a class="nav-item nav-link" href="{{ url_for('users.login') }}">Login</a>
+                        <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
+                    {% endif %}
                 </nav>
                 {% with messages = get_flashed_messages(with_categories=true) %}
                     {% if messages %}

@@ -1,34 +1,46 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div>
-    <div class="row justify-content-start">
-        <div class="col-3">
-            <h2>Blank</h2>
-        </div>
-        <div class="col-4 align-self-end">
-            <h2>Enda McCarthy</h2>
-            <h4>Software Development</h4>
-        </div>
-    </div>
-</div>
-<div class="line"></div>
 <div class="inside-content">
     <form method="POST" action="">
         {{ form.hidden_tag() }}
         <fieldset class="form-group row mb-2 mx-4"">
             <legend class="border-bottom mb-4">{{ legend }}</legend>
             <div class="form-group col-xs-3">
-                {{ form.symbol.label(class="form-control-label") }}
-                {% if form.symbol.errors %}
-                    {{ form.symbol(class="form-control is-invalid")}}
+                {{ form.number.label(class="form-control-label") }}
+                {% if form.number.errors %}
+                    {{ form.number(class="form-control is-invalid")}}
                     <div class="invalid-feedback">
-                        {% for error in form.symbol.errors %}
+                        {% for error in form.number.errors %}
                             <span>{{ error }}</span>
                         {% endfor %}
                     </div>
                 {% else %}
-                    {{ form.symbol(autocomplete="off", autofocus="on", class="form-control") }}
+                    {{ form.number(autocomplete="off", autofocus="on", class="form-control") }}
+                {% endif %}
+                <br>
+                {{ form.title.label(class="form-control-label") }}
+                {% if form.title.errors %}
+                    {{ form.title(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.title(autocomplete="off", class="form-control") }}
+                {% endif %}
+                <br>
+                {{ form.author.label(class="form-control-label") }}
+                {% if form.author.errors %}
+                    {{ form.author(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.author.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.author(autocomplete="off", class="form-control") }}
                 {% endif %}
             </div>
         </fieldset>

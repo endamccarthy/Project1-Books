@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template
-from core.main.forms import BookForm
+from flask import Blueprint, render_template, session, g
+from core.main.forms import SearchForm
 from wtforms.validators import ValidationError
 import requests
 import urllib.parse
@@ -9,16 +9,23 @@ import urllib.parse
 main = Blueprint('main', __name__)
 
 
+@main.before_request
+def before_request():
+    g.user_id = None
+    if "user_id" in session:
+        g.user_id = session["user_id"]
+
+
 @main.route("/", methods=['GET', 'POST'])
 def index():
-    form = BookForm()
+    form = SearchForm()
     if form.validate_on_submit():
-        book = lookup(form.symbol.data)
+        book = lookup(form.number.data)
         book_id = book["id"]
         book_isbn = book["isbn"]
         book_average_rating = book["average_rating"]
-        return render_template("home.html", title="Quoted", book_id=book_id, book_isbn=book_isbn, book_average_rating=book_average_rating, form=form)
-    return render_template('home.html', title="Quote", form=form)
+        return render_template("home.html", title="Search Results", legend="Search Results", book_id=book_id, book_isbn=book_isbn, book_average_rating=book_average_rating, form=form)
+    return render_template('home.html', title="Home", legend="Search Books", form=form)
 
 
 def lookup(isbn):
