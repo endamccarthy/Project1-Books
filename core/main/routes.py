@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, session, g
 from core.main.forms import SearchForm
+from core import db
 from wtforms.validators import ValidationError
 import requests
 import urllib.parse
@@ -20,11 +21,19 @@ def before_request():
 def index():
     form = SearchForm()
     if form.validate_on_submit():
+        books = db.execute("SELECT * FROM books WHERE isbn=(:isbn) FETCH FIRST ROW ONLY", {"isbn": form.number.data})
+        """
+        for book in books:
+            book_title = book["title"]
+            book_author = book["author"]
+            book_year = book["year"]
+            book_isbn = book["isbn"]
+        """
         book = lookup(form.number.data)
         book_id = book["id"]
-        book_isbn = book["isbn"]
         book_average_rating = book["average_rating"]
-        return render_template("home.html", title="Search Results", legend="Search Results", book_id=book_id, book_isbn=book_isbn, book_average_rating=book_average_rating, form=form)
+        return render_template("home.html", title="Search Results", legend="Search Results", book_id=book_id, 
+                                book_average_rating=book_average_rating, books=books, form=form)
     return render_template('home.html', title="Home", legend="Search Books", form=form)
 
 

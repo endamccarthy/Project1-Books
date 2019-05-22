@@ -49,10 +49,12 @@
         </div>
     </form>
     {% if book_id %}
+        {% for book in books %}
+            {{ book["isbn"] }}, {{ book["year"] }}, {{ book["author"] }}, {{ book["title"] }}
+        {% endfor %}
         <p>
             This book's ID is {{ book_id }}.<br>
-            This book's ISBN is {{ book_isbn }}.<br>
-            This book's average rating is {{ book_average_rating }}.
+            This book's average rating is {{ book_average_rating }}.<br>
         </p>
     {% endif %}
 </div>
