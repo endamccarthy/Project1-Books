@@ -48,7 +48,7 @@
             {{ form.submit(class="btn btn-sm btn-outline-dark") }}
         </div>
     </form>
-    {% if book_id %}
+    {% if books %}
         {% for book in books %}
             {{ book["isbn"] }}, {{ book["year"] }}, {{ book["author"] }}, {{ book["title"] }}
         {% endfor %}

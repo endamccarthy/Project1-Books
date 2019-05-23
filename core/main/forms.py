@@ -1,7 +1,7 @@
 import requests
 import urllib.parse
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 from wtforms.validators import DataRequired, ValidationError, Optional
 
 
@@ -33,3 +33,12 @@ class SearchForm(FlaskForm):
             self.submit.errors.append(msg)
             return False
         return True
+
+
+class SearchForm1(FlaskForm):
+    choices = [('number', 'number'),
+               ('title', 'title'),
+               ('author', 'author')]
+    select = SelectField('Search for book:', choices=choices)
+    search = StringField('', validators=[DataRequired()])
+    submit = SubmitField('Enter')
