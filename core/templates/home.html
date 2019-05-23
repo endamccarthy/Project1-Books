@@ -1,61 +1,38 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="inside-content">
-    <form method="POST" action="">
-        {{ form.hidden_tag() }}
-        <fieldset class="form-group row mb-2 mx-4"">
-            <legend class="border-bottom mb-4">{{ legend }}</legend>
-            <div class="form-group col-xs-3">
-                {{ form.number.label(class="form-control-label") }}
-                {% if form.number.errors %}
-                    {{ form.number(class="form-control is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.number.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    {{ form.number(autocomplete="off", autofocus="on", class="form-control") }}
-                {% endif %}
-                <br>
-                {{ form.title.label(class="form-control-label") }}
-                {% if form.title.errors %}
-                    {{ form.title(class="form-control is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.title.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    {{ form.title(autocomplete="off", class="form-control") }}
-                {% endif %}
-                <br>
-                {{ form.author.label(class="form-control-label") }}
-                {% if form.author.errors %}
-                    {{ form.author(class="form-control is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.author.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    {{ form.author(autocomplete="off", class="form-control") }}
-                {% endif %}
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group row mb-2 mx-4"">
+        <legend class="border-bottom mb-4">{{ legend }}</legend>
+        <div class="form-group col-xs-3">
+            {{ form.select.label(class="form-control-label") }}
+            {% if form.search.errors %}
+                {{ form.search(class="form-control is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.search.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+            <div>
+                <p>{{ form.select(autocomplete="off", autofocus="on", class="form-control") }}</p>
             </div>
-        </fieldset>
-        <div class="form-group row col-xs-3 mx-4"">
-            {{ form.submit(class="btn btn-sm btn-outline-dark") }}
+            <div>
+                <p>{{ form.search(autocomplete="off", class="form-control", placeholder="Enter Search Query") }}</p>
+            </div>
+            {% endif %}
         </div>
-    </form>
-    {% if books %}
-        {% for book in books %}
-            {{ book["isbn"] }}, {{ book["year"] }}, {{ book["author"] }}, {{ book["title"] }}
+    </fieldset>
+    <div class="form-group row col-xs-3 mx-4"">
+        {{ form.submit(class="btn btn-sm btn-outline-dark") }}
+    </div>
+</form>
+{% if qry %}
+    <ol>
+        {% for row in qry %}
+            <li><a href="{{ url_for('main.book', isbn=row['isbn']) }}"><b>{{ row["title"] }}</b> by <em>{{ row["author"] }}</em></a></li>
         {% endfor %}
-        <p>
-            This book's ID is {{ book_id }}.<br>
-            This book's average rating is {{ book_average_rating }}.<br>
-        </p>
-    {% endif %}
-</div>
+    </ol>
+{% endif %}
 {% endblock content %}

@@ -76,16 +76,18 @@
                         <a class="nav-item nav-link" href="{{ url_for('users.register') }}">Register</a>
                     {% endif %}
                 </nav>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <div class="alert alert-{{ category }}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                {% block content %}{% endblock %}
+                <div class="inside-content">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ category }}">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                    {% block content %}{% endblock %}
+                </div>
                 <div class="footer">
                     <div class="line"></div>
                     <p>Copyright &#169; 2019 Enda McCarthy</p>
