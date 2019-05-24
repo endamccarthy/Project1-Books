@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, session, g, flash, redirect
-from core.main.forms import SearchForm
+from flask import Blueprint, render_template, session, g, flash, redirect, request
+from core.main.forms import SearchForm, ReviewForm
 from core import db
 from wtforms.validators import ValidationError
 import requests
@@ -33,8 +33,12 @@ def index():
             qry = db.execute("SELECT * FROM books WHERE LOWER(title) LIKE LOWER(:title)", {"title": ("%" + search_string + "%")})
         else:
             qry = db.execute("SELECT * FROM books WHERE LOWER(author) LIKE LOWER(:author)", {"author": ("%" + search_string + "%")})
+
         if qry.rowcount == 0:
             flash('No results found!', 'danger')
+            return redirect('/')
+        elif qry.rowcount > 100:
+            flash('Too many results! Please be more specific', 'danger')
             return redirect('/')
         else:
             return render_template("home.html", title="Search Results", legend="Search Results", qry=qry, form=form)
@@ -43,8 +47,29 @@ def index():
 
 @main.route("/book/<string:isbn>", methods=['GET', 'POST'])
 def book(isbn):
-    print(isbn)
-    return render_template('book.html', title="Book Name", legend="Book Information", isbn=isbn)
+    books = db.execute("SELECT * FROM books WHERE isbn=(:isbn) FETCH FIRST ROW ONLY", {"isbn": isbn})
+    for book in books:
+        book_title = book["title"]
+        author = book["author"]
+        year = book["year"]
+    book = lookup(isbn)
+    average_rating = book["average_rating"]
+    ratings_count = book["work_ratings_count"]
+    form = ReviewForm()
+    if form.validate_on_submit():
+        rating = form.select.data
+        review = form.review.data
+        db.execute("INSERT INTO reviews (book_isbn,user_id,rating,review,) VALUES (:book_isbn,:user_id,:rating,:review)",
+                    {"book_isbn":isbn, 
+                     "user_id":g.user_id, 
+                     "rating":rating,
+                     "review":review})
+        db.commit()
+        return render_template('book.html', title="test", legend="Book Info", isbn=isbn, book_title=book_title, 
+                                author=author, year=year, average_rating=average_rating, ratings_count=ratings_count, form=form)
+
+    return render_template('book.html', title="Book Info", legend="Book Info", isbn=isbn, book_title=book_title, 
+                            author=author, year=year, average_rating=average_rating, ratings_count=ratings_count, form=form)
 
 
 def lookup(isbn):

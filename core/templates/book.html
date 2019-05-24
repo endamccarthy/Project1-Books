@@ -1,5 +1,47 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    {{ isbn }}
+<div>
+    <h1>{{ legend }}</h1>
+    <div class="line"></div>
+    <h2>{{ book_title }}</h2>
+    <div class="line"></div>
+    <h5><b>Author: </b>{{ author }}</h5>
+    <h5><b>Published in: </b>{{ year }}</h5>
+    <h5><b>ISBN Number: </b>{{ isbn }}</h5><br>
+    <h5><b>Goodreads Review Data:</b></h5>
+    {% if ratings_count > 0 %}
+        <h5><b>Number of Ratings Received: </b>{{ ratings_count }}</h5>
+        <h5><b>Average Rating: </b>{{ average_rating }}</h5>
+    {% else %}
+        <h5>This book hasn't been reviewed on Goodreads yet!</h5>
+    {% endif %}
+</div>
+<form method="POST" action="">
+    {{ form.hidden_tag() }}
+    <fieldset class="form-group row mb-2 mx-4"">
+        <legend class="border-bottom mb-4">{{ legend }}</legend>
+        <div class="form-group col-xs-3">
+            {{ form.select.label(class="form-control-label") }}
+            {% if form.review.errors %}
+                {{ form.review(class="form-control is-invalid")}}
+                <div class="invalid-feedback">
+                    {% for error in form.review.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div>
+                    <p>{{ form.select(autocomplete="off", autofocus="on", class="form-control") }}</p>
+                </div>
+                <div>
+                    <p>{{ form.review(autocomplete="off", class="form-control", placeholder="Leave a short review if you like") }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </fieldset>
+    <div class="form-group row col-xs-3 mx-4"">
+        {{ form.submit(class="btn btn-sm btn-outline-dark") }}
+    </div>
+</form>
 {% endblock content %}

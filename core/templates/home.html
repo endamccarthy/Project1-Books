@@ -15,12 +15,12 @@
                     {% endfor %}
                 </div>
             {% else %}
-            <div>
-                <p>{{ form.select(autocomplete="off", autofocus="on", class="form-control") }}</p>
-            </div>
-            <div>
-                <p>{{ form.search(autocomplete="off", class="form-control", placeholder="Enter Search Query") }}</p>
-            </div>
+                <div>
+                    <p>{{ form.select(autocomplete="off", autofocus="on", class="form-control") }}</p>
+                </div>
+                <div>
+                    <p>{{ form.search(autocomplete="off", class="form-control", placeholder="Enter Search Query") }}</p>
+                </div>
             {% endif %}
         </div>
     </fieldset>
