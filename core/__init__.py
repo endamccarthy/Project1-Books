@@ -22,21 +22,20 @@ def create_app(config_class=Config):
 
     bcrypt.init_app(app)
 
-    date = '2019-06-24'
-
     # create users table
     db.execute("CREATE TABLE IF NOT EXISTS users (\
                 id SERIAL PRIMARY KEY, \
                 username VARCHAR(20) NOT NULL UNIQUE, \
                 email VARCHAR(120) NOT NULL UNIQUE, \
                 password VARCHAR(255))")
+    # create reviews table
     db.execute("CREATE TABLE IF NOT EXISTS reviews (\
                 id SERIAL PRIMARY KEY, \
                 book_isbn VARCHAR(13) NOT NULL REFERENCES books (isbn), \
-                user_id VARCHAR(20) NOT NULL REFERENCES users (id), \
+                user_id INT NOT NULL REFERENCES users (id), \
                 rating INT NOT NULL, \
-                review VARCHAR(255), \
-                date_posted DATE NOT NULL DEFAULT :date", {"date":date})
+                review VARCHAR(255) NOT NULL, \
+                date DATE default CURRENT_TIMESTAMP)")
     db.commit()
 
     # Blueprints setup

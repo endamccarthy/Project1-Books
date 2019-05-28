@@ -56,10 +56,11 @@ def book(isbn):
     average_rating = book["average_rating"]
     ratings_count = book["work_ratings_count"]
     form = ReviewForm()
+    # add review to database if form is submitted
     if form.validate_on_submit():
         rating = form.select.data
         review = form.review.data
-        db.execute("INSERT INTO reviews (book_isbn,user_id,rating,review,) VALUES (:book_isbn,:user_id,:rating,:review)",
+        db.execute("INSERT INTO reviews (book_isbn,user_id,rating,review) VALUES (:book_isbn,:user_id,:rating,:review)",
                     {"book_isbn":isbn, 
                      "user_id":g.user_id, 
                      "rating":rating,
