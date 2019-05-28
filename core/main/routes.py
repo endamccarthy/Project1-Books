@@ -56,21 +56,33 @@ def book(isbn):
     average_rating = book["average_rating"]
     ratings_count = book["work_ratings_count"]
     form = ReviewForm()
+    username = db.execute("SELECT username FROM users WHERE id=(:id) FETCH FIRST ROW ONLY", {"id": g.user_id})
+    for row in username:
+        username = row[0]
+    
+    test = db.execute("SELECT * FROM reviews WHERE username=(:username) FETCH FIRST ROW ONLY", {"username": username})
+    if test.rowcount > 0:
+        print('test1')
+
+    existing_reviews = db.execute("SELECT * FROM reviews WHERE book_isbn=(:isbn)", {"isbn": isbn})
+    if existing_reviews.rowcount == 0:
+        existing_reviews = None
     # add review to database if form is submitted
     if form.validate_on_submit():
         rating = form.select.data
         review = form.review.data
-        db.execute("INSERT INTO reviews (book_isbn,user_id,rating,review) VALUES (:book_isbn,:user_id,:rating,:review)",
+        db.execute("INSERT INTO reviews (book_isbn,username,rating,review) VALUES (:book_isbn,:username,:rating,:review)",
                     {"book_isbn":isbn, 
-                     "user_id":g.user_id, 
+                     "username":username, 
                      "rating":rating,
                      "review":review})
         db.commit()
-        return render_template('book.html', title="test", legend="Book Info", isbn=isbn, book_title=book_title, 
-                                author=author, year=year, average_rating=average_rating, ratings_count=ratings_count, form=form)
+        existing_reviews = db.execute("SELECT * FROM reviews WHERE book_isbn=(:isbn)", {"isbn": isbn})
+        return render_template('book.html', title="Book Info", legend="Book Info", isbn=isbn, book_title=book_title, existing_reviews=existing_reviews,
+                                author=author, year=year, average_rating=average_rating, ratings_count=ratings_count, username=username, form=form)
 
-    return render_template('book.html', title="Book Info", legend="Book Info", isbn=isbn, book_title=book_title, 
-                            author=author, year=year, average_rating=average_rating, ratings_count=ratings_count, form=form)
+    return render_template('book.html', title="Book Info", legend="Book Info", isbn=isbn, book_title=book_title, existing_reviews=existing_reviews,
+                            author=author, year=year, average_rating=average_rating, ratings_count=ratings_count, username=username, form=form)
 
 
 def lookup(isbn):

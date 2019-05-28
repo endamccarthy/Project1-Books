@@ -1,47 +1,63 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div>
-    <h1>{{ legend }}</h1>
+<div class="mx-4">
+    <div>
+        <h1>{{ legend }}</h1>
+        <div class="line"></div>
+        <h2>{{ book_title }}</h2> by {{ author }}<br><br>
+        <h6>Published in: {{ year }}</h6>
+        <h6>ISBN Number: {{ isbn }}</h6><br>
+        <h6><b>Goodreads Review Data:</b></h6>
+        {% if ratings_count > 0 %}
+            <h6>Number of Ratings Received: {{ ratings_count }}</h6>
+            <h6>Average Rating: {{ average_rating }}</h6>
+        {% else %}
+            <h6>This book hasn't been reviewed on Goodreads yet!</h6>
+        {% endif %}
+    </div>
     <div class="line"></div>
-    <h2>{{ book_title }}</h2>
+    <form class="mx-3" method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group row mt-5 mb-2">
+            <div class="form-group col-xs-3">
+                <h4>Leave a Review</h4><br>
+                {{ form.select.label(class="form-control-label") }}
+                {% if form.review.errors %}
+                    {{ form.review(class="form-control is-invalid")}}
+                    <div class="invalid-feedback">
+                        {% for error in form.review.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div>
+                        <p>{{ form.select(autocomplete="off", autofocus="on", class="form-control") }}</p>
+                    </div>
+                    <div>
+                        <p>{{ form.review(autocomplete="off", class="form-control", placeholder="Leave a short review if you like") }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group row col-xs-3">
+            {{ form.submit(class="btn btn-sm btn-outline-dark") }}
+        </div>
+    </form>
     <div class="line"></div>
-    <h5><b>Author: </b>{{ author }}</h5>
-    <h5><b>Published in: </b>{{ year }}</h5>
-    <h5><b>ISBN Number: </b>{{ isbn }}</h5><br>
-    <h5><b>Goodreads Review Data:</b></h5>
-    {% if ratings_count > 0 %}
-        <h5><b>Number of Ratings Received: </b>{{ ratings_count }}</h5>
-        <h5><b>Average Rating: </b>{{ average_rating }}</h5>
-    {% else %}
-        <h5>This book hasn't been reviewed on Goodreads yet!</h5>
+    {% if existing_reviews %}
+        {% for rows in existing_reviews %}
+            <div class="list-group mb-2 mx-4">
+                <div class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <a href="#"><h5 class="mb-1">{{ rows["rating"] }} out of 5</h5></a>
+                        <small>{{ rows["date"] }}</small>
+                    </div>
+                    <p class="mb-1">{{ rows["review"] }}</p>
+                    <small>{{ rows["username"] }}</small>
+                </div>
+            </div>
+        {% endfor %}
     {% endif %}
 </div>
-<form method="POST" action="">
-    {{ form.hidden_tag() }}
-    <fieldset class="form-group row mb-2 mx-4"">
-        <legend class="border-bottom mb-4">{{ legend }}</legend>
-        <div class="form-group col-xs-3">
-            {{ form.select.label(class="form-control-label") }}
-            {% if form.review.errors %}
-                {{ form.review(class="form-control is-invalid")}}
-                <div class="invalid-feedback">
-                    {% for error in form.review.errors %}
-                        <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div>
-                    <p>{{ form.select(autocomplete="off", autofocus="on", class="form-control") }}</p>
-                </div>
-                <div>
-                    <p>{{ form.review(autocomplete="off", class="form-control", placeholder="Leave a short review if you like") }}</p>
-                </div>
-            {% endif %}
-        </div>
-    </fieldset>
-    <div class="form-group row col-xs-3 mx-4"">
-        {{ form.submit(class="btn btn-sm btn-outline-dark") }}
-    </div>
-</form>
 {% endblock content %}

@@ -32,7 +32,7 @@ def create_app(config_class=Config):
     db.execute("CREATE TABLE IF NOT EXISTS reviews (\
                 id SERIAL PRIMARY KEY, \
                 book_isbn VARCHAR(13) NOT NULL REFERENCES books (isbn), \
-                user_id INT NOT NULL REFERENCES users (id), \
+                username VARCHAR(20) NOT NULL REFERENCES users (username), \
                 rating INT NOT NULL, \
                 review VARCHAR(255) NOT NULL, \
                 date DATE default CURRENT_TIMESTAMP)")
