@@ -22,14 +22,14 @@ def create_tables():
     db.commit()
 
     # open csv file and insert each row into books table
-    with open('core/static/books1.csv', mode='r') as csv_file:
+    with open('core/static/books.csv', mode='r') as csv_file:
         csv_reader = csv.DictReader(csv_file)
         for row in csv_reader:
             db.execute("INSERT INTO books (isbn,title,author,year) VALUES (:isbn,:title,:author,:year)",
-                    {"isbn":row["isbn"], 
-                     "title":row["title"], 
-                     "author":row["author"], 
-                     "year":row["year"]})
+                        {"isbn":row["isbn"], 
+                        "title":row["title"], 
+                        "author":row["author"], 
+                        "year":row["year"]})
         db.commit()
  
 

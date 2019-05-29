@@ -57,10 +57,3 @@ def login():
 def logout():
     session.pop("user_id", None)
     return redirect(url_for('main.index'))
-
-
-@users.route("/test")
-def test():
-    if g.user_id:
-        return render_template('test.html')
-    return redirect(url_for('users.login'))

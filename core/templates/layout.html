@@ -23,6 +23,9 @@
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/fontawesome.js" integrity="sha384-6OIrr52G08NpOFSZdxxz1xdNSndlD4vdcf/q2myIUVO0VsqaGHJsB0RaBE01VTOY" crossorigin="anonymous"></script>
 
+        <!-- Social Media Icons -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css" integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+
     </head>
     <body>
 
@@ -36,25 +39,11 @@
                     <li>
                         <h4 style="padding-left:10px">Contents</h4>
                     </li>
-                    <li class="active">
-                        <a href="home.html">Home</a>
+                    <li>
+                        <a href="{{ url_for('main.index') }}">Home</a>
                     </li>
                     <li>
-                        <a href="#pageSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Module Results</a>
-                        <ul class="collapse list-unstyled" id="pageSubmenu">
-                            <li>
-                                <a href="results4th.html">4th Year</a>
-                            </li>
-                            <li>
-                                <a href="results3rd.html">3rd Year</a>
-                            </li>
-                            <li>
-                                <a href="results2nd.html">2nd Year</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="contact.html">Contact</a>
+                        <a href="{{ url_for('main.contact') }}">Contact</a>
                     </li>
                 </ul>
             </nav>

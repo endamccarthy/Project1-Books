@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, g, flash, redirect, request
+from flask import Blueprint, render_template, session, g, flash, redirect, request, url_for, jsonify, abort
 from core.main.forms import SearchForm, ReviewForm
 from core import db
 from wtforms.validators import ValidationError
@@ -10,6 +10,7 @@ import urllib.parse
 main = Blueprint('main', __name__)
 
 
+# this is carried out once a request is made, it checks if the user is logged in
 @main.before_request
 def before_request():
     g.user_id = None
@@ -19,6 +20,8 @@ def before_request():
 
 @main.route("/", methods=['GET', 'POST'])
 def index():
+    if g.user_id == None:
+        return redirect(url_for('users.login'))
     form = SearchForm()
     if form.validate_on_submit():
         search_string = form.search.data
@@ -47,42 +50,90 @@ def index():
 
 @main.route("/book/<string:isbn>", methods=['GET', 'POST'])
 def book(isbn):
+    if g.user_id == None:
+        return redirect(url_for('users.login'))
+
+    # get book information from database using isbn number 
     books = db.execute("SELECT * FROM books WHERE isbn=(:isbn) FETCH FIRST ROW ONLY", {"isbn": isbn})
     for book in books:
         book_title = book["title"]
         author = book["author"]
         year = book["year"]
+    
+    # get book information from Goodreads API using lookup function
     book = lookup(isbn)
     average_rating = book["average_rating"]
     ratings_count = book["work_ratings_count"]
+
     form = ReviewForm()
+
+    # get username of user
     username = db.execute("SELECT username FROM users WHERE id=(:id) FETCH FIRST ROW ONLY", {"id": g.user_id})
     for row in username:
         username = row[0]
     
-    test = db.execute("SELECT * FROM reviews WHERE username=(:username) FETCH FIRST ROW ONLY", {"username": username})
-    if test.rowcount > 0:
-        print('test1')
+    # check if the user has already left a review for this book
+    already_reviewed = False
+    rows = db.execute("SELECT * FROM reviews WHERE username=(:username) and book_isbn=(:isbn) FETCH FIRST ROW ONLY", {"username": username, "isbn": isbn})
+    if rows.rowcount > 0:
+        already_reviewed = True
 
+    # get all reviews for this book from all users
     existing_reviews = db.execute("SELECT * FROM reviews WHERE book_isbn=(:isbn)", {"isbn": isbn})
     if existing_reviews.rowcount == 0:
         existing_reviews = None
+
     # add review to database if form is submitted
     if form.validate_on_submit():
         rating = form.select.data
         review = form.review.data
-        db.execute("INSERT INTO reviews (book_isbn,username,rating,review) VALUES (:book_isbn,:username,:rating,:review)",
-                    {"book_isbn":isbn, 
-                     "username":username, 
-                     "rating":rating,
-                     "review":review})
-        db.commit()
+        if already_reviewed == False:
+            db.execute("INSERT INTO reviews (book_isbn,username,rating,review) VALUES (:book_isbn,:username,:rating,:review)",
+                        {"book_isbn":isbn, 
+                        "username":username, 
+                        "rating":rating,
+                        "review":review})
+            db.commit()
         existing_reviews = db.execute("SELECT * FROM reviews WHERE book_isbn=(:isbn)", {"isbn": isbn})
-        return render_template('book.html', title="Book Info", legend="Book Info", isbn=isbn, book_title=book_title, existing_reviews=existing_reviews,
-                                author=author, year=year, average_rating=average_rating, ratings_count=ratings_count, username=username, form=form)
+        already_reviewed = True
+        return render_template('book.html', title="Book Info", legend="Book Info", isbn=isbn, book_title=book_title, author=author, 
+                                year=year, average_rating=average_rating, ratings_count=ratings_count, username=username, 
+                                existing_reviews=existing_reviews, already_reviewed=already_reviewed)
 
-    return render_template('book.html', title="Book Info", legend="Book Info", isbn=isbn, book_title=book_title, existing_reviews=existing_reviews,
-                            author=author, year=year, average_rating=average_rating, ratings_count=ratings_count, username=username, form=form)
+    return render_template('book.html', title="Book Info", legend="Book Info", isbn=isbn, book_title=book_title, author=author, 
+                            year=year, average_rating=average_rating, ratings_count=ratings_count, username=username, 
+                            existing_reviews=existing_reviews, already_reviewed=already_reviewed, form=form)
+
+
+@main.route("/api/<string:isbn>")
+def api_request(isbn):
+    books = db.execute("SELECT * FROM books WHERE isbn=(:isbn) FETCH FIRST ROW ONLY", {"isbn": isbn})
+    if books.rowcount == 0:
+        abort(404)
+    for book in books:
+        title = book["title"]
+        author = book["author"]
+        year = book["year"]
+    reviews = db.execute("SELECT * FROM reviews WHERE book_isbn=(:isbn)", {"isbn": isbn})
+    review_count = float(reviews.rowcount)
+    total = 0.0
+    if review_count == 0:
+        average_score = 0.0
+    else:
+        for review in reviews:
+            total = total + float(review["rating"])
+        average_score = total/review_count
+    return jsonify(title=title,
+                   author=author,
+                   year=year,
+                   isbn=isbn,
+                   review_count=review_count,
+                   average_score=average_score)
+
+
+@main.route("/contact")
+def contact():
+    return render_template("contact.html")
 
 
 def lookup(isbn):
@@ -104,19 +155,3 @@ def lookup(isbn):
         }
     except (KeyError, TypeError, ValueError):
         return None
-
-
-
-"""
-@main.route("/", methods=['GET', 'POST'])
-def index():
-    form = SearchForm()
-    if form.validate_on_submit():
-        books = db.execute("SELECT * FROM books WHERE isbn=(:isbn) FETCH FIRST ROW ONLY", {"isbn": form.number.data})
-        book = lookup(form.number.data)
-        book_id = book["id"]
-        book_average_rating = book["average_rating"]
-        return render_template("home.html", title="Search Results", legend="Search Results", book_id=book_id, 
-                                book_average_rating=book_average_rating, books=books, form=form)
-    return render_template('home.html', title="Home", legend="Search Books", form=form)
-"""

@@ -17,40 +17,44 @@
         {% endif %}
     </div>
     <div class="line"></div>
-    <form class="mx-3" method="POST" action="">
-        {{ form.hidden_tag() }}
-        <fieldset class="form-group row mt-5 mb-2">
-            <div class="form-group col-xs-3">
-                <h4>Leave a Review</h4><br>
-                {{ form.select.label(class="form-control-label") }}
-                {% if form.review.errors %}
-                    {{ form.review(class="form-control is-invalid")}}
-                    <div class="invalid-feedback">
-                        {% for error in form.review.errors %}
-                            <span>{{ error }}</span>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <div>
-                        <p>{{ form.select(autocomplete="off", autofocus="on", class="form-control") }}</p>
-                    </div>
-                    <div>
-                        <p>{{ form.review(autocomplete="off", class="form-control", placeholder="Leave a short review if you like") }}</p>
-                    </div>
-                {% endif %}
+    {% if already_reviewed == False %}
+        <form class="mx-3" method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group row mt-5 mb-2">
+                <div class="form-group col-xs-3">
+                    <h4>Leave a Review</h4><br>
+                    {{ form.select.label(class="form-control-label") }}
+                    {% if form.review.errors %}
+                        {{ form.review(class="form-control is-invalid")}}
+                        <div class="invalid-feedback">
+                            {% for error in form.review.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div>
+                            <p>{{ form.select(autocomplete="off", autofocus="on", class="form-control") }}</p>
+                        </div>
+                        <div>
+                            <p>{{ form.review(autocomplete="off", class="form-control", placeholder="Leave a short review if you like") }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group row col-xs-3">
+                {{ form.submit(class="btn btn-sm btn-outline-dark") }}
             </div>
-        </fieldset>
-        <div class="form-group row col-xs-3">
-            {{ form.submit(class="btn btn-sm btn-outline-dark") }}
-        </div>
-    </form>
+        </form>
+    {% else %}
+        <h5>You have already reviewed this book!</h5>
+    {% endif %}
     <div class="line"></div>
     {% if existing_reviews %}
         {% for rows in existing_reviews %}
             <div class="list-group mb-2 mx-4">
                 <div class="list-group-item list-group-item-action">
                     <div class="d-flex w-100 justify-content-between">
-                        <a href="#"><h5 class="mb-1">{{ rows["rating"] }} out of 5</h5></a>
+                        <h5 class="mb-1">{{ rows["rating"] }} out of 5</h5>
                         <small>{{ rows["date"] }}</small>
                     </div>
                     <p class="mb-1">{{ rows["review"] }}</p>
