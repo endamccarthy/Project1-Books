@@ -7,6 +7,7 @@ from core.users.forms import RegistrationForm, LoginForm
 users = Blueprint('users', __name__)
 
 
+# this is carried out once a request is made, it checks if the user is logged in
 @users.before_request
 def before_request():
     g.user_id = None
