@@ -2,6 +2,8 @@
 ### Enda McCarthy
 #### Web Programming with Python and JavaScript
 
+This is a book review website. Users can register an account, search books from a database and leave reviews. 
+
 I set this project up using blueprints.
 The 3 blueprints I used are main, users and errors.
 - In the main directory are the routes for the home page, book page, contact page and the API request page. The forms for searching books and reviewing books are also here.
