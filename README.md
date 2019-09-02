@@ -1,6 +1,7 @@
 ## Project 1 - Books
 ### Enda McCarthy
 #### Web Programming with Python and JavaScript
+#### June 2019
 
 This is a book review website. Users can register an account, search books from a database and leave reviews. 
 
